@@ -2,6 +2,15 @@ import { useContext } from 'react';
 import GameSearchContext from './GameSearchContext';
 
 
+type SimpleFilters =
+    {
+        minPlayers?: number;
+        maxPlayers?: number;
+        minVoteRatio?: number;
+        minMinAge?: number;
+        maxMinAge?: number;
+    }
+
 type GameData =
 {
     ageRecommendationDisplayName: string
@@ -43,24 +52,51 @@ type GameResult =
 type JsonResponse =
 {
     searchResults: GameResult[]
+    nextPageToken: string
 }
 
 export default function PaginatedGameList()
 {
-    const {page, setPage, gameList , setGameList, latestResponse: JsonResponse, setLatestResponse} = useContext(GameSearchContext)
+    const {page, setPage, gameList , setGameList, latestResponse, setLatestResponse, simpleFilters, setSimpleFilters} = useContext(GameSearchContext)
+
+    function gamePassesFilters(game: GameData, simpleFilters: SimpleFilters)
+    {
+
+        return (
+            (simpleFilters.minPlayers == null || game.playerCount >= simpleFilters.minPlayers)
+            && (simpleFilters.maxPlayers == null || game.playerCount <= simpleFilters.maxPlayers)
+            && (simpleFilters.minMinAge == null || game.minimumAge >= simpleFilters.minMinAge)
+            && (simpleFilters.maxMinAge == null || game.minimumAge <= simpleFilters.maxMinAge)
+            && (simpleFilters.minVoteRatio == null || game.totalUpVotes / (game.totalDownVotes + game.totalUpVotes) > simpleFilters.minVoteRatio)
+        )
+    }
 
     return <>
         <p>Results:</p>
-        <ul>
+        <ul className={"GameListHolder"}>
             {
                 gameList.map((item: GameResult) => {
                     // console.log(item)
-                    return <>
-                        <li id={item.contents[0].contentId}>
-                            <p>{item.contents[0].name }</p>
+                    if (gamePassesFilters(item.contents[0], simpleFilters))
+                    return (
+                        <li key={item.contents[0].contentId} className={"GameListItem"}>
+                            <h3>{item.contents[0].name }</h3>
                             <br/>
-                        </li>
-                    </>
+                            <p>Current players: <em>{item.contents[0].playerCount}</em></p>
+                            <p>Upvotes: <b className={"text-lime-500"}>{item.contents[0].totalUpVotes}</b></p>
+                            <p>Downvotes: <b className={"text-red-900"}>{item.contents[0].totalDownVotes}</b></p>
+                            <p>Ratio: <b>{Math.round(item.contents[0].totalUpVotes / (item.contents[0].totalUpVotes + item.contents[0].totalDownVotes * 100))}%</b></p>
+
+                            <br/>
+                            <hr/>
+                            <br/>
+                            <a href={`https://roblox.com/games/${item.contents[0].rootPlaceId}`}>
+                                <div className={"UniversalButton"}>
+                                    <p>View on Roblox</p>
+                                </div>
+                            </a>
+                        </li>)
+
                 })
             }
 

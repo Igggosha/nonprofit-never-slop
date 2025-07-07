@@ -7,6 +7,7 @@ import Search from '../../components/Search';
 import GameSearchContextProvider from '../../components/GameSearchContextProvider';
 import SearchBlock from '../../components/SearchBlock';
 import PaginatedGameList from '../../components/PaginatedGameList';
+import MoreRequester from '../../components/MoreRequester';
 
 
 
@@ -24,6 +25,8 @@ export default function Page() {
                     <SearchBlock/>
 
                     <PaginatedGameList/>
+
+                    <MoreRequester/>
 
                 </GameSearchContextProvider>
 

@@ -4,7 +4,7 @@ import GameSearchContext from './GameSearchContext';
 
 export default function SearchBlock()
 {
-    const {setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery} = useContext(GameSearchContext)
+    const {setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken} = useContext(GameSearchContext)
     // const [response, setResponse] = useState("");
     // const [query, setQuery] = useState("");
 
@@ -15,17 +15,17 @@ export default function SearchBlock()
             if (query != "")
             {
                 console.log("fetching")
-                let json = await Search(query)
+                let json = await Search(query, nextPageToken)
 
                 console.log(json)
-                setLatestResponse(toString(json))
-                setGameList(...gameList, json.searchResults)
+                setLatestResponse(json)
+                setGameList([...gameList, ...json.searchResults])
             }
         }
 
         getData()
 
-    }, [query]);
+    }, [query, nextPageToken]);
 
     function SubmitForm(e)
     {
@@ -35,6 +35,7 @@ export default function SearchBlock()
 
         setQuery(entries.query)
         setGameList([])
+        setNextPageToken("")
     }
 
 

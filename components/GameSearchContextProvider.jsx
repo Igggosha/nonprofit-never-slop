@@ -1,5 +1,6 @@
-import { createContext, useState } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 import GameSearchContext from './GameSearchContext';
+
 
 export default function GameSearchContextProvider({ children })
 {
@@ -8,9 +9,12 @@ export default function GameSearchContextProvider({ children })
     const [gameList, setGameList] = useState([]);
     const [latestResponse, setLatestResponse] = useState();
     const [query, setQuery] = useState("");
+    const [nextPageToken, setNextPageToken] = useState("");
+
+    const [simpleFilters, setSimpleFilters] = useState({});
 
     return <>
-        <context.Provider value={{page, setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery}}>
+        <context.Provider value={{page, setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, simpleFilters, setSimpleFilters}}>
             {children}
         </context.Provider>
     </>

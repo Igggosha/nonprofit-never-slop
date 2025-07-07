@@ -155,3 +155,45 @@
         }
     }
 }
+
+.GameListHolder {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.GameListItem {
+    width: calc(min(300px, 100%));
+    background: rgba(163, 192, 214, 50%);
+
+    margin: 8px;
+    padding: 8px;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.UniversalButton {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+
+    background: #47a2d6;
+    color: white;
+    text-decoration: none;
+
+    transition: 0.2s;
+
+    border-radius: 24px;
+    padding: 4px;
+}
+.UniversalButton:hover {
+    background: #5db5e1;
+}
+.UniversalButton:active {
+    background: #377491;
+}
+

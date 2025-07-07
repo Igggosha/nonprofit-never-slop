@@ -5,10 +5,10 @@ function GenerateGuid()
     return crypto.randomUUID()
 }
 
-export default async function Search(query)
+export default async function Search(query, nextPageToken)
 {
     // console.log(query)
-    let response = await fetch(`https://apis.roblox.com/search-api/omni-search?searchQuery=${query}&pageToken=&sessionId=${GenerateGuid()}`, {
+    let response = await fetch(`https://apis.roblox.com/search-api/omni-search?searchQuery=${query}&pageToken=${nextPageToken}&sessionId=${GenerateGuid()}`, {
         "headers": {
             // "accept": "application/json, text/plain, */*",
             // "accept-language": "en",
