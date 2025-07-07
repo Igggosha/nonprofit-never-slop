@@ -55,6 +55,17 @@ type JsonResponse =
     nextPageToken: string
 }
 
+function SponsoredBar({ props }: {props: {isSponsored: boolean}})
+{
+    if (props.isSponsored)
+    {
+        return <>
+            <br/>
+            <b className={"text-red-900"}>{"WARNING! THIS GAME IS 'SPONSORED'."}</b>
+        </>
+    }
+}
+
 export default function PaginatedGameList()
 {
     const {page, setPage, gameList , setGameList, latestResponse, setLatestResponse, simpleFilters, setSimpleFilters} = useContext(GameSearchContext)
@@ -87,6 +98,10 @@ export default function PaginatedGameList()
                             <p>Upvotes: <b className={"text-lime-500"}>{item.contents[0].totalUpVotes}</b></p>
                             <p>Downvotes: <b className={"text-red-900"}>{item.contents[0].totalDownVotes}</b></p>
                             <p>Ratio: <b>{Math.round(item.contents[0].totalUpVotes / (item.contents[0].totalUpVotes + item.contents[0].totalDownVotes) * 100)}%</b></p>
+
+                            <SponsoredBar props={{ isSponsored: item.contents[0].isSponsored }}/>
+
+
 
                             <br/>
                             <hr/>

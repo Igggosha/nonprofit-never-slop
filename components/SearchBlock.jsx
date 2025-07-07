@@ -4,7 +4,7 @@ import GameSearchContext from './GameSearchContext';
 
 export default function SearchBlock()
 {
-    const {setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken} = useContext(GameSearchContext)
+    const {setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, fetchEffectFlag, setFetchEffectFlag, guid} = useContext(GameSearchContext)
     // const [response, setResponse] = useState("");
     // const [query, setQuery] = useState("");
 
@@ -15,7 +15,7 @@ export default function SearchBlock()
             if (query != "")
             {
                 console.log("fetching")
-                let json = await Search(query, nextPageToken)
+                let json = await Search(query, nextPageToken, guid)
 
                 console.log(json)
                 setLatestResponse(json)

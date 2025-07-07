@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import GameSearchContext from './GameSearchContext';
+import GetGuid from './GetGuid';
 
 
 export default function GameSearchContextProvider({ children })
@@ -11,10 +12,18 @@ export default function GameSearchContextProvider({ children })
     const [query, setQuery] = useState("");
     const [nextPageToken, setNextPageToken] = useState("");
 
+    const [fetchEffectFlag, setFetchEffectFlag] = useState(false);
+
     const [simpleFilters, setSimpleFilters] = useState({});
 
+    const [guid, setGuid] = useState();
+
+    useEffect(() => {
+        setGuid(GetGuid())
+    }, []);
+
     return <>
-        <context.Provider value={{page, setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, simpleFilters, setSimpleFilters}}>
+        <context.Provider value={{page, setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, simpleFilters, setSimpleFilters, fetchEffectFlag, setFetchEffectFlag, guid, setGuid}}>
             {children}
         </context.Provider>
     </>
