@@ -1,5 +1,5 @@
 "use server"
-export default function GetGuid()
+export default async function GetGuid()
 {
     return crypto.randomUUID()
 }

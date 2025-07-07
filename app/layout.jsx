@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import Footer from '../components/Footer';
 
 export const metadata = {
     title: {
@@ -19,6 +20,8 @@ export default function RootLayout({ children }) {
                         <main className="grow">{children}</main>
                     </div>
                 </div>
+
+                <Footer/>
             </body>
         </html>
     );
