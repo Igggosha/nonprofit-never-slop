@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import GameSearchContext from './GameSearchContext';
 
 
@@ -59,17 +59,18 @@ export default function PaginatedGameList()
 {
     const {page, setPage, gameList , setGameList, latestResponse, setLatestResponse, simpleFilters, setSimpleFilters} = useContext(GameSearchContext)
 
-    function gamePassesFilters(game: GameData, simpleFilters: SimpleFilters)
+    const gamePassesFilters = useCallback(function (game: GameData)
     {
-
+        // console.log(simpleFilters.maxPlayers)
+        // console.log(game.playerCount)
         return (
             (simpleFilters.minPlayers == null || game.playerCount >= simpleFilters.minPlayers)
             && (simpleFilters.maxPlayers == null || game.playerCount <= simpleFilters.maxPlayers)
             && (simpleFilters.minMinAge == null || game.minimumAge >= simpleFilters.minMinAge)
             && (simpleFilters.maxMinAge == null || game.minimumAge <= simpleFilters.maxMinAge)
-            && (simpleFilters.minVoteRatio == null || game.totalUpVotes / (game.totalDownVotes + game.totalUpVotes) > simpleFilters.minVoteRatio)
+            && (simpleFilters.minVoteRatio == null || (game.totalUpVotes / (game.totalDownVotes + game.totalUpVotes) * 100) > simpleFilters.minVoteRatio)
         )
-    }
+    }, [simpleFilters])
 
     return <>
         <p>Results:</p>
@@ -77,7 +78,7 @@ export default function PaginatedGameList()
             {
                 gameList.map((item: GameResult) => {
                     // console.log(item)
-                    if (gamePassesFilters(item.contents[0], simpleFilters))
+                    if (gamePassesFilters(item.contents[0]))
                     return (
                         <li key={item.contents[0].contentId} className={"GameListItem"}>
                             <h3>{item.contents[0].name }</h3>
@@ -85,7 +86,7 @@ export default function PaginatedGameList()
                             <p>Current players: <em>{item.contents[0].playerCount}</em></p>
                             <p>Upvotes: <b className={"text-lime-500"}>{item.contents[0].totalUpVotes}</b></p>
                             <p>Downvotes: <b className={"text-red-900"}>{item.contents[0].totalDownVotes}</b></p>
-                            <p>Ratio: <b>{Math.round(item.contents[0].totalUpVotes / (item.contents[0].totalUpVotes + item.contents[0].totalDownVotes * 100))}%</b></p>
+                            <p>Ratio: <b>{Math.round(item.contents[0].totalUpVotes / (item.contents[0].totalUpVotes + item.contents[0].totalDownVotes) * 100)}%</b></p>
 
                             <br/>
                             <hr/>
@@ -96,7 +97,8 @@ export default function PaginatedGameList()
                                 </div>
                             </a>
                         </li>)
-
+                    // else
+                    //     return <><p>Skipped</p></>
                 })
             }
 

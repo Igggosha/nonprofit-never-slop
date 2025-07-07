@@ -1,8 +1,16 @@
 "use server"
-
+// server bad because rate limits... idk how to circumvent it though
 function GenerateGuid()
 {
-    return crypto.randomUUID()
+    try {
+        return crypto.randomUUID()
+    }
+    catch (e)
+    {
+        console.log(e)
+        return Math.random() * 100000
+    }
+
 }
 
 export default async function Search(query, nextPageToken)
@@ -25,9 +33,9 @@ export default async function Search(query, nextPageToken)
         // "referrer": "https://www.roblox.com/",
         // "referrerPolicy": "strict-origin-when-cross-origin",
         // "body": null,
-        "method": "GET",
-        "mode": "cors",
-        "credentials": "include"
+        // "method": "GET",
+        // "mode": "cors",
+        // "credentials": "include"
     })
     console.log(response)
     let json = await response.json()

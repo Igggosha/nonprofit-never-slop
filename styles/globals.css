@@ -197,3 +197,20 @@
     background: #377491;
 }
 
+input[type=text]
+{
+    background: white;
+    color: #171717;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding: 4px;
+    border-radius: 8px;
+}
+input[type=checkbox]
+{
+    margin: 4px;
+}
+input::placeholder
+{
+    color: #5b5b5b;
+}

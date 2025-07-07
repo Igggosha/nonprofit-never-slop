@@ -8,6 +8,7 @@ import GameSearchContextProvider from '../../components/GameSearchContextProvide
 import SearchBlock from '../../components/SearchBlock';
 import PaginatedGameList from '../../components/PaginatedGameList';
 import MoreRequester from '../../components/MoreRequester';
+import FilterSelectionForm from '../../components/FilterSelectionForm';
 
 
 
@@ -23,10 +24,19 @@ export default function Page() {
 
 
                     <SearchBlock/>
-
+                    <br/>
+                    <FilterSelectionForm/>
+                    <br/>
+                    <hr/>
+                    <br/>
                     <PaginatedGameList/>
-
+                    <br/>
+                    <hr/>
+                    <br/>
                     <MoreRequester/>
+
+                    <br/>
+                    <br/>
 
                 </GameSearchContextProvider>
 
