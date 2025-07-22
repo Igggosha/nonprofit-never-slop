@@ -1,19 +1,10 @@
 "use server"
 // server bad because rate limits... idk how to circumvent it though
-function GenerateGuid()
-{
-    try {
-        return crypto.randomUUID()
-    }
-    catch (e)
-    {
-        console.log(e)
-        return Math.random() * 100000
-    }
 
-}
 
-export default async function Search(query, nextPageToken, guid)
+// import { ComplexFilters } from './FilterTypes';
+
+export default async function Search(query: string, nextPageToken: string, guid: string)
 {
     // console.log(query)
     let response = await fetch(`https://apis.rotunnel.com/search-api/omni-search?searchQuery=${query}&pageToken=${nextPageToken}&sessionId=${guid}`, {

@@ -4,7 +4,7 @@ import GameSearchContext from './GameSearchContext';
 
 export default function SearchBlock()
 {
-    const {setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, fetchEffectFlag, setFetchEffectFlag, guid} = useContext(GameSearchContext)
+    const {setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, fetchEffectFlag, setFetchEffectFlag, guid, gameIds, setGameIds} = useContext(GameSearchContext)
     // const [response, setResponse] = useState("");
     // const [query, setQuery] = useState("");
 
@@ -20,6 +20,9 @@ export default function SearchBlock()
                 console.log(json)
                 setLatestResponse(json)
                 setGameList([...gameList, ...json.searchResults])
+
+                let newIds = json.searchResults.map(game => game.contents[0].contentId)
+                setGameIds(newIds)
             }
         }
 

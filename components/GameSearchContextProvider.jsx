@@ -18,12 +18,14 @@ export default function GameSearchContextProvider({ children })
 
     const [guid, setGuid] = useState();
 
+    const [gameIds, setGameIds] = useState([]);
+
     useEffect(() => {
         setGuid(GetGuid())
     }, []);
 
     return <>
-        <context.Provider value={{page, setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, simpleFilters, setSimpleFilters, fetchEffectFlag, setFetchEffectFlag, guid, setGuid}}>
+        <context.Provider value={{page, setPage, gameList, setGameList, latestResponse, setLatestResponse, query, setQuery, nextPageToken, setNextPageToken, simpleFilters, setSimpleFilters, fetchEffectFlag, setFetchEffectFlag, guid, setGuid, gameIds, setGameIds}}>
             {children}
         </context.Provider>
     </>

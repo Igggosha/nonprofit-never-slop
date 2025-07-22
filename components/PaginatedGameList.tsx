@@ -1,15 +1,10 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import GameSearchContext from './GameSearchContext';
+import Image from 'next/image';
+import GetImages from './GetImages';
 
 
-type SimpleFilters =
-    {
-        minPlayers?: number;
-        maxPlayers?: number;
-        minVoteRatio?: number;
-        minMinAge?: number;
-        maxMinAge?: number;
-    }
+
 
 type GameData =
 {
@@ -55,7 +50,7 @@ type JsonResponse =
     nextPageToken: string
 }
 
-function SponsoredBar({ props }: {props: {isSponsored: boolean}})
+function SponsoredBar( props : {isSponsored: boolean})
 {
     if (props.isSponsored)
     {
@@ -66,9 +61,47 @@ function SponsoredBar({ props }: {props: {isSponsored: boolean}})
     }
 }
 
+function GameBlock(props: {game: GameData, imageLink: string})
+{
+    let game: GameData = props.game
+    let imageLink: string = props.imageLink
+
+    return (
+        <li key={game.contentId} className={"GameListItem"}>
+            <h3>{game.name}</h3>
+            <br/>
+            <p>Current players: <em>{game.playerCount}</em></p>
+            <p>Upvotes: <b className={"text-lime-500"}>{game.totalUpVotes}</b></p>
+            <p>Downvotes: <b className={"text-red-900"}>{game.totalDownVotes}</b></p>
+            <p>Ratio: <b>{Math.round(game.totalUpVotes / (game.totalUpVotes + game.totalDownVotes) * 100)}%</b></p>
+
+            {
+                (imageLink != undefined && imageLink != "") ?
+                    <Image src={imageLink} alt={""} width={0} height={0} sizes={'100%'} style={{width: '100%', height:'auto'}}/>
+                    :
+                    <p>Loading image...</p>
+            }
+
+            <SponsoredBar isSponsored={game.isSponsored}/>
+
+
+
+            <br/>
+            <hr/>
+            <br/>
+            <a href={`https://roblox.com/games/${game.rootPlaceId}`}>
+                <div className={"UniversalButton"}>
+                    <p>View on Roblox</p>
+                </div>
+            </a>
+        </li>)
+}
+
 export default function PaginatedGameList()
 {
-    const {page, setPage, gameList , setGameList, latestResponse, setLatestResponse, simpleFilters, setSimpleFilters} = useContext(GameSearchContext)
+    const {page, setPage, gameList , setGameList, latestResponse, setLatestResponse, simpleFilters, setSimpleFilters, gameIds, setGameIds} = useContext(GameSearchContext)
+
+    const [gameImages, setGameImages] = useState({} as {string: string});
 
     const gamePassesFilters = useCallback(function (game: GameData)
     {
@@ -83,6 +116,25 @@ export default function PaginatedGameList()
         )
     }, [simpleFilters])
 
+    useEffect(() => {
+        async function getImages()
+        {
+
+            let result = await GetImages(gameIds)
+            result.data.forEach(item => {
+                // @ts-ignore
+                setGameImages(im => {
+                    let value = item.imageUrl
+                    return {
+                        ...im, [item.targetId]: value
+                    }
+                })
+            })
+            console.log(gameImages)
+        }
+        getImages()
+    }, [gameIds]);
+
     // yeah, I like <br/> tags, how'd you know
 
     return <>
@@ -93,27 +145,9 @@ export default function PaginatedGameList()
                     // console.log(item)
                     if (gamePassesFilters(item.contents[0]))
                     return (
-                        <li key={item.contents[0].contentId} className={"GameListItem"}>
-                            <h3>{item.contents[0].name }</h3>
-                            <br/>
-                            <p>Current players: <em>{item.contents[0].playerCount}</em></p>
-                            <p>Upvotes: <b className={"text-lime-500"}>{item.contents[0].totalUpVotes}</b></p>
-                            <p>Downvotes: <b className={"text-red-900"}>{item.contents[0].totalDownVotes}</b></p>
-                            <p>Ratio: <b>{Math.round(item.contents[0].totalUpVotes / (item.contents[0].totalUpVotes + item.contents[0].totalDownVotes) * 100)}%</b></p>
-
-                            <SponsoredBar props={{ isSponsored: item.contents[0].isSponsored }}/>
-
-
-
-                            <br/>
-                            <hr/>
-                            <br/>
-                            <a href={`https://roblox.com/games/${item.contents[0].rootPlaceId}`}>
-                                <div className={"UniversalButton"}>
-                                    <p>View on Roblox</p>
-                                </div>
-                            </a>
-                        </li>)
+                        //@ts-ignore
+                        <GameBlock game={item.contents[0]} key={item.contents[0].contentId} imageLink={gameImages[item.contents[0].contentId]}/>
+                       )
                     // else
                     //     return <><p>Skipped</p></>
                 })
